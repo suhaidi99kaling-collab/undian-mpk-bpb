@@ -1,0 +1,1747 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Undian Calon MPK Kg Burung Pingai Berakas</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#ecfdf5',
+                            100: '#d1fae5',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                            800: '#065f46',
+                            900: '#064e3b',
+                        },
+                        gold: {
+                            100: '#fef3c7',
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col antialiased selection:bg-brand-100 selection:text-brand-900">
+
+    <!-- Header Utama -->
+    <header class="bg-gradient-to-r from-brand-900 via-brand-800 to-emerald-900 text-white shadow-lg">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div class="flex items-start sm:items-center gap-4">
+                    <!-- Ikon Rasmi / Emblem -->
+                    <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gold-400/20 border border-gold-400/40 flex items-center justify-center shrink-0 shadow-inner">
+                        <svg class="w-7 h-7 sm:w-8 sm:h-8 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <span class="inline-block text-xs font-semibold uppercase tracking-wider bg-gold-400/20 text-gold-100 border border-gold-400/30 px-2.5 py-0.5 rounded-full mb-1">
+                            Majlis Perundingan Kampung
+                        </span>
+                        <h1 class="text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight leading-tight">
+                            Undian Calon MPK Kg Burung Pingai Berakas
+                        </h1>
+                        <p class="text-emerald-100/90 text-xs sm:text-sm mt-1">
+                            Borang Pencalonan Jawatan &amp; Carta Ringkasan Undian
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Kawalan AJK / Admin (Jumlah pengundi disembunyikan daripada pengundi biasa) -->
+                <div class="flex items-center gap-2.5 self-start sm:self-center">
+                    <!-- Kotak Jumlah Pencalonan (Hanya kelihatan dalam Mod AJK) -->
+                    <div id="admin-stat-box" class="hidden bg-white/10 backdrop-blur-sm border border-white/15 rounded-xl px-4 py-2 text-center min-w-[90px]">
+                        <div id="stat-total-votes" class="text-xl sm:text-2xl font-bold text-gold-400">0</div>
+                        <div class="text-[11px] text-emerald-100 uppercase tracking-wide">Pencalonan</div>
+                    </div>
+
+                    <!-- Butang Tetapan Google Sheets (Hanya kelihatan dalam Mod AJK) -->
+                    <button id="btn-open-gsheet-modal" type="button"
+                        class="hidden items-center gap-2 bg-white/10 hover:bg-white/20 active:scale-95 transition border border-white/20 rounded-xl px-3.5 py-3 text-xs sm:text-sm font-medium text-white cursor-pointer"
+                        title="Tetapan Google Sheets">
+                        <svg class="w-4 h-4 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"></path>
+                        </svg>
+                        <span id="gsheet-btn-label" class="hidden sm:inline">Google Sheets</span>
+                        <span id="gsheet-status-dot" class="w-2.5 h-2.5 rounded-full bg-slate-400"></span>
+                    </button>
+
+                    <!-- Butang Log Masuk / Keluar Mod AJK -->
+                    <button id="btn-admin-toggle" type="button"
+                        class="flex items-center gap-2 bg-white/10 hover:bg-white/20 active:scale-95 transition border border-white/20 rounded-xl px-3.5 py-3 text-xs sm:text-sm font-semibold text-white cursor-pointer"
+                        title="Akses AJK untuk Data Spreadsheet & Tetapan">
+                        <svg id="admin-lock-icon" class="w-4 h-4 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                        </svg>
+                        <span id="admin-btn-label">Mod AJK</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Bar Status Langsung -->
+            <div class="mt-4 pt-3 border-t border-white/15 flex flex-wrap items-center justify-between gap-2 text-xs text-emerald-100/90">
+                <div class="flex items-center gap-2">
+                    <span id="live-pulse-dot" class="w-2 h-2 rounded-full bg-amber-400"></span>
+                    <span id="live-status-text">Sedia menerima pencalonan penduduk kampung.</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span id="last-sync-text" class="text-[11px] text-emerald-200/80"></span>
+                    <button type="button" id="btn-sync-now"
+                        class="hidden items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/15 hover:bg-white/25 text-white font-semibold transition cursor-pointer">
+                        <svg id="sync-icon" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                        </svg>
+                        <span>Kemas Kini</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigasi Tab -->
+    <div class="bg-white border-b border-slate-200 sticky top-0 z-20 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6">
+            <nav class="flex gap-1 sm:gap-2 overflow-x-auto py-2" aria-label="Navigasi Utama">
+                <button type="button" data-tab="borang"
+                    class="tab-btn flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold whitespace-nowrap transition bg-brand-600 text-white shadow-sm">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                    </svg>
+                    Borang Pencalonan
+                </button>
+                <button type="button" data-tab="ringkasan"
+                    class="tab-btn flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold whitespace-nowrap transition text-slate-600 hover:bg-slate-100">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    </svg>
+                    Ringkasan Undian (Carta)
+                </button>
+                <!-- Tab Data Spreadsheet: Disembunyikan daripada pengundi biasa, hanya terbuka untuk AJK -->
+                <button type="button" id="tab-btn-spreadsheet" data-tab="spreadsheet"
+                    class="tab-btn hidden items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold whitespace-nowrap transition text-slate-600 hover:bg-slate-100">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                    </svg>
+                    Data Spreadsheet (AJK)
+                    <span id="badge-count" class="ml-1 px-2 py-0.5 text-xs rounded-full bg-slate-200 text-slate-700">0</span>
+                </button>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Kandungan Utama -->
+    <main class="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8">
+
+        <!-- ================= TAB 1: BORANG PENCALONAN (KOTAK TICK SAHAJA) ================= -->
+        <section id="panel-borang" class="tab-panel">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="bg-slate-50 border-b border-slate-200 px-5 sm:px-8 py-5">
+                    <h2 class="text-lg sm:text-xl font-bold text-slate-900">Isi Borang Pencalonan</h2>
+                    <p class="text-xs sm:text-sm text-slate-500 mt-0.5">
+                        Sila tanda (&#10003;) pada kotak jawatan yang dipilih, kemudian masukkan nama calon dan nama pencalon.
+                    </p>
+                </div>
+
+                <form id="nomination-form" class="p-5 sm:p-8 space-y-6" novalidate>
+                    <!-- Bahagian 1: Pilihan Jawatan (Kotak Tick Sahaja) -->
+                    <div>
+                        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+                            <span class="block text-sm font-bold text-slate-800">
+                                1. Pilih Jawatan (Tanda pada Kotak) <span class="text-rose-500">*</span>
+                            </span>
+                            <span class="text-xs font-medium text-brand-700 bg-brand-50 border border-brand-100 px-2.5 py-1 rounded-full">
+                                Boleh tanda satu atau lebih jawatan
+                            </span>
+                        </div>
+
+                        <!-- Senarai Kotak Tick -->
+                        <div id="container-tick" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                            <!-- Diisi secara automatik oleh JS -->
+                        </div>
+                        <p id="error-jawatan" class="hidden text-xs font-medium text-rose-600 mt-2">
+                            Sila tanda sekurang-kurangnya satu kotak jawatan.
+                        </p>
+                    </div>
+
+                    <!-- Bahagian 2: Maklumat Calon & Pencalon -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-2">
+                        <!-- Nama Yang Dicalonkan -->
+                        <div>
+                            <label for="input-calon" class="block text-sm font-bold text-slate-800 mb-2">
+                                2. Nama Yang Dicalonkan <span class="text-rose-500">*</span>
+                            </label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                    </svg>
+                                </span>
+                                <input type="text" id="input-calon" autocomplete="off"
+                                    placeholder="Contoh: Awang Haji Ahmad bin Bakar"
+                                    class="w-full rounded-xl border border-slate-300 bg-white pl-11 pr-4 py-3.5 text-sm sm:text-base text-slate-800 placeholder:text-slate-400 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/15 outline-none transition">
+                            </div>
+                            <p id="error-calon" class="hidden text-xs font-medium text-rose-600 mt-1.5">
+                                Sila masukkan nama yang dicalonkan.
+                            </p>
+                        </div>
+
+                        <!-- Nama Yang Mencalonkan -->
+                        <div>
+                            <label for="input-pencalon" class="block text-sm font-bold text-slate-800 mb-2">
+                                3. Nama Yang Mencalonkan <span class="text-rose-500">*</span>
+                            </label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                                    </svg>
+                                </span>
+                                <input type="text" id="input-pencalon" autocomplete="off"
+                                    placeholder="Contoh: Dayang Siti binti Salleh"
+                                    class="w-full rounded-xl border border-slate-300 bg-white pl-11 pr-4 py-3.5 text-sm sm:text-base text-slate-800 placeholder:text-slate-400 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/15 outline-none transition">
+                            </div>
+                            <p id="error-pencalon" class="hidden text-xs font-medium text-rose-600 mt-1.5">
+                                Sila masukkan nama pencalon.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Bahagian 3: Catatan Tambahan (Pilihan) -->
+                    <div>
+                        <label for="input-catatan" class="block text-sm font-semibold text-slate-700 mb-2">
+                            Catatan / No. Telefon <span class="text-slate-400 font-normal">(Pilihan)</span>
+                        </label>
+                        <input type="text" id="input-catatan" autocomplete="off"
+                            placeholder="Contoh: No. Simpang / No. Telefon / Cadangan ringkas"
+                            class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/15 outline-none transition">
+                    </div>
+
+                    <!-- Butang Hantar & Reset -->
+                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-4 border-t border-slate-100">
+                        <button type="button" id="btn-reset-form"
+                            class="px-5 py-3.5 rounded-xl border border-slate-300 text-slate-700 font-semibold text-sm hover:bg-slate-50 active:scale-[0.98] transition">
+                            Kosongkan Borang
+                        </button>
+                        <button type="submit" id="btn-submit"
+                            class="flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm sm:text-base shadow-md shadow-brand-600/20 active:scale-[0.98] transition">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span>Hantar Pencalonan</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- ================= TAB 2: RINGKASAN UNDIAN (CARTA BAR PER JAWATAN) ================= -->
+        <section id="panel-ringkasan" class="tab-panel hidden space-y-5">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                    <h2 class="text-lg sm:text-xl font-bold text-slate-900">Carta Ringkasan Undian Mengikut Jawatan</h2>
+                    <p class="text-xs sm:text-sm text-slate-500 mt-0.5">
+                        Paparan carta bar bagi kedudukan calon yang diundi (rekod penuh pengundi &amp; spreadsheet dirahsiakan).
+                    </p>
+                </div>
+                <div class="flex items-center gap-2.5 self-start sm:self-auto">
+                    <button type="button" id="btn-refresh-summary"
+                        class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 font-semibold text-xs sm:text-sm transition">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                        </svg>
+                        Kemas Kini Carta
+                    </button>
+                </div>
+            </div>
+
+            <!-- Penapis Pantas Jawatan (Pilihan Butang Pil) -->
+            <div id="chart-jawatan-pills" class="flex flex-wrap gap-2">
+                <!-- Dijana secara automatik oleh JS -->
+            </div>
+
+            <!-- Grid Carta Bar Per Jawatan -->
+            <div id="summary-grid" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <!-- Kad carta bar dijana oleh JS -->
+            </div>
+        </section>
+
+        <!-- ================= TAB 3: DATA SPREADSHEET (KHAS AJK SAHAJA) ================= -->
+        <section id="panel-spreadsheet" class="tab-panel hidden space-y-5">
+            <!-- Bar Alat Spreadsheet -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-5">
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                    <!-- Carian & Tapisan -->
+                    <div class="flex flex-col sm:flex-row gap-3 flex-1">
+                        <div class="relative flex-1">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                </svg>
+                            </span>
+                            <input type="text" id="search-spreadsheet"
+                                placeholder="Cari nama calon atau pencalon..."
+                                class="w-full rounded-xl border border-slate-300 pl-10 pr-4 py-2.5 text-sm focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 outline-none">
+                        </div>
+                        <select id="filter-jawatan"
+                            class="rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm font-medium text-slate-700 bg-white focus:border-brand-500 outline-none">
+                            <option value="SEMUA">Semua Jawatan</option>
+                            <!-- Diisi secara automatik oleh JS -->
+                        </select>
+                    </div>
+
+                    <!-- Butang Eksport Spreadsheet -->
+                    <div class="flex flex-wrap items-center gap-2.5">
+                        <button type="button" id="btn-refresh-table"
+                            class="flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 font-semibold text-xs sm:text-sm transition">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                            </svg>
+                            Muat Semula
+                        </button>
+                        <button type="button" id="btn-copy-tsv"
+                            class="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs sm:text-sm transition">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path>
+                            </svg>
+                            Salin ke Sheets
+                        </button>
+                        <button type="button" id="btn-export-csv"
+                            class="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-semibold text-xs sm:text-sm shadow-sm transition">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                            </svg>
+                            Muat Turun Excel (.csv)
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Jadual Gaya Spreadsheet -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-100 border-b border-slate-200 text-xs font-bold text-slate-600 uppercase tracking-wider">
+                                <th class="py-3.5 px-4 border-r border-slate-200 w-12 text-center">#</th>
+                                <th class="py-3.5 px-4 border-r border-slate-200 whitespace-nowrap">Tarikh &amp; Masa</th>
+                                <th class="py-3.5 px-4 border-r border-slate-200 whitespace-nowrap">Jawatan</th>
+                                <th class="py-3.5 px-4 border-r border-slate-200 whitespace-nowrap">Nama Yang Dicalonkan</th>
+                                <th class="py-3.5 px-4 border-r border-slate-200 whitespace-nowrap">Nama Pencalon</th>
+                                <th class="py-3.5 px-4 border-r border-slate-200 whitespace-nowrap">Catatan</th>
+                                <th class="py-3.5 px-4 text-center w-20">Tindakan</th>
+                            </tr>
+                        </thead>
+                        <tbody id="spreadsheet-body" class="divide-y divide-slate-200 text-sm">
+                            <!-- Baris data dimasukkan oleh JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Keadaan Kosong -->
+                <div id="empty-state" class="py-14 px-6 text-center">
+                    <div class="w-14 h-14 mx-auto rounded-2xl bg-slate-100 flex items-center justify-center text-slate-400 mb-3">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-base font-bold text-slate-700">Tiada Rekod Pencalonan Lagi</h3>
+                    <p class="text-sm text-slate-500 mt-1 max-w-sm mx-auto">
+                        Semua pencalonan yang dihantar melalui borang akan dipaparkan di sini dalam format spreadsheet untuk rujukan AJK.
+                    </p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-5 mt-auto">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 text-center text-xs text-slate-500">
+            &copy; 2026 Majlis Perundingan Kampung (MPK) Kg Burung Pingai Berakas. Sistem Pencalonan &amp; Undian Digital.
+        </div>
+    </footer>
+
+    <!-- ================= MODAL: LOG MASUK MOD AJK ================= -->
+    <div id="admin-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 border border-slate-200 space-y-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-brand-100 text-brand-700 flex items-center justify-center">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-base font-bold text-slate-900">Akses Khas AJK</h3>
+                </div>
+                <button type="button" id="btn-close-admin-modal" class="p-1.5 rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-700">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <p class="text-xs text-slate-600 leading-relaxed">
+                Masukkan kata laluan AJK untuk melihat <strong>Data Spreadsheet</strong>, jumlah pengundi, dan tetapan <strong>Google Sheets</strong>.
+            </p>
+
+            <form id="admin-login-form" class="space-y-3">
+                <div>
+                    <label for="input-admin-pin" class="block text-xs font-bold text-slate-700 mb-1.5">Kata Laluan AJK</label>
+                    <input type="password" id="input-admin-pin" autocomplete="off" placeholder="Masukkan kata laluan..."
+                        class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 outline-none">
+                    <p id="error-admin-pin" class="hidden text-xs font-medium text-rose-600 mt-1.5">Kata laluan tidak tepat.</p>
+                </div>
+                <div class="flex gap-2.5 pt-1">
+                    <button type="button" id="btn-cancel-admin"
+                        class="flex-1 py-2.5 rounded-xl border border-slate-300 text-slate-700 font-semibold text-sm hover:bg-slate-50 transition">
+                        Batal
+                    </button>
+                    <button type="submit"
+                        class="flex-1 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-semibold text-sm shadow-sm transition">
+                        Buka Akses
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ================= MODAL: TETAPAN GOOGLE SHEETS ================= -->
+    <div id="gsheet-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-xl w-full max-h-[90vh] overflow-y-auto border border-slate-200">
+            <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between sticky top-0 bg-white">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-base sm:text-lg font-bold text-slate-900">Sambungan Terus ke Google Sheets</h3>
+                </div>
+                <button type="button" id="btn-close-gsheet-modal" class="p-2 rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="p-6 space-y-5 text-sm">
+                <p class="text-slate-600 leading-relaxed">
+                    Sambungkan <strong>Google Sheets</strong> di bawah supaya setiap pencalonan dari telefon penduduk kampung disimpan <strong>secara kekal</strong> dan carta undian dikemas kini <strong>secara langsung (setiap 10 saat)</strong>.
+                </p>
+
+                <div>
+                    <label for="input-gsheet-url" class="block font-bold text-slate-800 mb-1.5">URL Web App Google Apps Script</label>
+                    <input type="url" id="input-gsheet-url"
+                        placeholder="https://script.google.com/macros/s/AKfycb.../exec"
+                        class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 outline-none">
+                    <div class="mt-2 flex flex-wrap items-center gap-2">
+                        <button type="button" id="btn-test-gsheet"
+                            class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
+                            Uji Sambungan
+                        </button>
+                        <button type="button" id="btn-copy-share-link"
+                            class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 transition">
+                            Salin Pautan Pengundi
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Panduan Ringkas Apps Script -->
+                <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2.5">
+                    <div class="flex items-center justify-between">
+                        <span class="font-bold text-slate-800 text-xs uppercase tracking-wide">Kod Google Apps Script (Dua Hala &amp; Undian Serentak)</span>
+                        <button type="button" id="btn-copy-script"
+                            class="text-xs font-semibold text-brand-700 hover:text-brand-800 bg-brand-100 hover:bg-brand-200 px-3 py-1 rounded-lg transition">
+                            Salin Kod
+                        </button>
+                    </div>
+                    <ol class="list-decimal list-inside text-xs text-slate-600 space-y-1">
+                        <li>Buka Google Sheets baharu, klik menu <strong>Extensions &gt; Apps Script</strong>.</li>
+                        <li>Padam kod sedia ada, tampal kod di bawah, kemudian klik ikon <strong>Save</strong>.</li>
+                        <li>Klik <strong>Deploy &gt; New deployment &gt; Web app</strong>.</li>
+                        <li>Tetapkan <em>Execute as</em>: <strong>Me</strong>, dan <em>Who has access</em>: <strong>Anyone</strong>.</li>
+                        <li>Klik <strong>Deploy</strong>, benarkan akses, kemudian salin <strong>Web app URL</strong> ke ruang di atas.</li>
+                    </ol>
+                    <pre id="apps-script-code" class="bg-slate-900 text-emerald-300 text-[11px] p-3 rounded-lg overflow-x-auto leading-relaxed">function getOrInitSheet() {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(["ID", "Tarikh &amp; Masa", "Jawatan", "Nama Dicalonkan", "Nama Pencalon", "Catatan"]);
+  }
+  return sheet;
+}
+
+// Membaca semua rekod secara langsung untuk paparan carta undian
+function doGet(e) {
+  var sheet = getOrInitSheet();
+  var values = sheet.getDataRange().getValues();
+  var records = [];
+  for (var i = values.length - 1; i >= 1; i--) {
+    var row = values[i];
+    if (!row[2] &amp;&amp; !row[3]) continue;
+    records.push({
+      id: String(row[0] || ("row_" + i)),
+      masa: String(row[1] || ""),
+      jawatan: String(row[2] || ""),
+      calon: String(row[3] || ""),
+      pencalon: String(row[4] || ""),
+      catatan: String(row[5] || "-")
+    });
+  }
+  return ContentService
+    .createTextOutput(JSON.stringify({ status: "ok", records: records }))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+// Menyimpan atau memadam rekod dengan LockService (selamat untuk undian serentak)
+function doPost(e) {
+  var lock = LockService.getScriptLock();
+  lock.waitLock(15000);
+  try {
+    var sheet = getOrInitSheet();
+    var payload = JSON.parse(e.postData.contents);
+
+    if (payload.action === "delete" &amp;&amp; payload.id) {
+      var data = sheet.getDataRange().getValues();
+      for (var i = data.length - 1; i >= 1; i--) {
+        if (String(data[i][0]) === String(payload.id)) {
+          sheet.deleteRow(i + 1);
+          break;
+        }
+      }
+      return ContentService
+        .createTextOutput(JSON.stringify({ status: "deleted" }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
+    var items = payload.records ? payload.records : [payload];
+    items.forEach(function(item) {
+      sheet.appendRow([
+        item.id || ("rec_" + new Date().getTime()),
+        item.masa || "",
+        item.jawatan || "",
+        item.calon || "",
+        item.pencalon || "",
+        item.catatan || "-"
+      ]);
+    });
+
+    return ContentService
+      .createTextOutput(JSON.stringify({ status: "ok", count: items.length }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } finally {
+    lock.releaseLock();
+  }
+}</pre>
+                </div>
+
+                <div class="flex justify-end gap-2.5 pt-2">
+                    <button type="button" id="btn-clear-gsheet"
+                        class="px-4 py-2.5 rounded-xl border border-slate-300 text-slate-600 font-semibold hover:bg-slate-50 transition">
+                        Putuskan
+                    </button>
+                    <button type="button" id="btn-save-gsheet"
+                        class="px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-semibold shadow-sm transition">
+                        Simpan Tetapan
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= MODAL: PENGESAHAN PADAM ================= -->
+    <div id="delete-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 border border-slate-200 text-center space-y-4">
+            <div class="w-12 h-12 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center mx-auto">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                </svg>
+            </div>
+            <div>
+                <h3 class="text-lg font-bold text-slate-900">Padam Rekod Ini?</h3>
+                <p id="delete-modal-desc" class="text-sm text-slate-500 mt-1">Rekod pencalonan ini akan dipadam daripada jadual spreadsheet.</p>
+            </div>
+            <div class="flex gap-3 pt-2">
+                <button type="button" id="btn-cancel-delete"
+                    class="flex-1 py-2.5 rounded-xl border border-slate-300 text-slate-700 font-semibold text-sm hover:bg-slate-50 transition">
+                    Batal
+                </button>
+                <button type="button" id="btn-confirm-delete"
+                    class="flex-1 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-semibold text-sm shadow-sm transition">
+                    Ya, Padam
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= NOTIFIKASI TOAST ================= -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-xs sm:max-w-sm pointer-events-none"></div>
+
+    <!-- ================= SKRIP APLIKASI ================= -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, deleteDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        (function () {
+            'use strict';
+
+            // Jika anda mengehoskan fail ini sendiri, tampal URL Web App Google Sheets kekal di sini:
+            const DEFAULT_GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbx9iMIoeTvp84l1soCFShfGDw3JnUfeDkhOk8FvraKb/dev';
+
+            // Kata laluan lalai untuk AJK membuka Data Spreadsheet & tetapan Google Sheets
+            const ADMIN_PIN = 'MPK2026';
+
+            // Selang masa kemas kini langsung dari Google Sheets (10 saat)
+            const LIVE_POLL_INTERVAL_MS = 10000;
+
+            // Senarai rasmi 7 jawatan MPK Kg Burung Pingai Berakas
+            const SENARAI_JAWATAN = [
+                'Penasihat',
+                'Pengerusi',
+                'Timbalan Pengerusi',
+                'Setiausaha',
+                'Penolong Setiausaha',
+                'Bendahari',
+                'Penolong Bendahari'
+            ];
+
+            // Warna lencana & warna bar carta bagi setiap jawatan
+            const TEMA_JAWATAN = {
+                'Penasihat': {
+                    badge: 'bg-purple-100 text-purple-800 border-purple-200',
+                    bar: 'bg-purple-600',
+                    barBg: 'bg-purple-100',
+                    dot: 'bg-purple-500'
+                },
+                'Pengerusi': {
+                    badge: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+                    bar: 'bg-emerald-600',
+                    barBg: 'bg-emerald-100',
+                    dot: 'bg-emerald-500'
+                },
+                'Timbalan Pengerusi': {
+                    badge: 'bg-teal-100 text-teal-800 border-teal-200',
+                    bar: 'bg-teal-600',
+                    barBg: 'bg-teal-100',
+                    dot: 'bg-teal-500'
+                },
+                'Setiausaha': {
+                    badge: 'bg-blue-100 text-blue-800 border-blue-200',
+                    bar: 'bg-blue-600',
+                    barBg: 'bg-blue-100',
+                    dot: 'bg-blue-500'
+                },
+                'Penolong Setiausaha': {
+                    badge: 'bg-sky-100 text-sky-800 border-sky-200',
+                    bar: 'bg-sky-600',
+                    barBg: 'bg-sky-100',
+                    dot: 'bg-sky-500'
+                },
+                'Bendahari': {
+                    badge: 'bg-amber-100 text-amber-800 border-amber-200',
+                    bar: 'bg-amber-500',
+                    barBg: 'bg-amber-100',
+                    dot: 'bg-amber-500'
+                },
+                'Penolong Bendahari': {
+                    badge: 'bg-orange-100 text-orange-800 border-orange-200',
+                    bar: 'bg-orange-500',
+                    barBg: 'bg-orange-100',
+                    dot: 'bg-orange-500'
+                }
+            };
+
+            // Keadaan aplikasi
+            const state = {
+                nominations: [],
+                googleSheetUrl: DEFAULT_GOOGLE_SHEET_URL,
+                isAdmin: false, // Pengundi biasa tidak nampak Data Spreadsheet & jumlah pengundi
+                selectedChartJawatan: 'SEMUA',
+                pendingDeleteId: null,
+                isSyncing: false,
+                pollTimer: null,
+                // Sambungan penyimpanan awan terbina (jika tersedia)
+                db: null,
+                auth: null,
+                currentUser: null,
+                appId: typeof __app_id !== 'undefined' ? __app_id : 'mpk-bpb-undian'
+            };
+
+            // Rujukan Elemen DOM
+            const el = {
+                tabButtons: document.querySelectorAll('.tab-btn'),
+                tabPanels: document.querySelectorAll('.tab-panel'),
+                tabBtnSpreadsheet: document.getElementById('tab-btn-spreadsheet'),
+                adminStatBox: document.getElementById('admin-stat-box'),
+                statTotalVotes: document.getElementById('stat-total-votes'),
+                badgeCount: document.getElementById('badge-count'),
+                livePulseDot: document.getElementById('live-pulse-dot'),
+                liveStatusText: document.getElementById('live-status-text'),
+                lastSyncText: document.getElementById('last-sync-text'),
+                btnSyncNow: document.getElementById('btn-sync-now'),
+                syncIcon: document.getElementById('sync-icon'),
+                gsheetBtnLabel: document.getElementById('gsheet-btn-label'),
+
+                // Mod AJK / Admin
+                btnAdminToggle: document.getElementById('btn-admin-toggle'),
+                adminBtnLabel: document.getElementById('admin-btn-label'),
+                adminModal: document.getElementById('admin-modal'),
+                btnCloseAdminModal: document.getElementById('btn-close-admin-modal'),
+                btnCancelAdmin: document.getElementById('btn-cancel-admin'),
+                adminLoginForm: document.getElementById('admin-login-form'),
+                inputAdminPin: document.getElementById('input-admin-pin'),
+                errorAdminPin: document.getElementById('error-admin-pin'),
+
+                // Borang (Kotak Tick Sahaja)
+                form: document.getElementById('nomination-form'),
+                containerTick: document.getElementById('container-tick'),
+                inputCalon: document.getElementById('input-calon'),
+                inputPencalon: document.getElementById('input-pencalon'),
+                inputCatatan: document.getElementById('input-catatan'),
+                errorJawatan: document.getElementById('error-jawatan'),
+                errorCalon: document.getElementById('error-calon'),
+                errorPencalon: document.getElementById('error-pencalon'),
+                btnResetForm: document.getElementById('btn-reset-form'),
+                btnSubmit: document.getElementById('btn-submit'),
+
+                // Ringkasan Carta Bar
+                chartJawatanPills: document.getElementById('chart-jawatan-pills'),
+                summaryGrid: document.getElementById('summary-grid'),
+                btnRefreshSummary: document.getElementById('btn-refresh-summary'),
+
+                // Spreadsheet (AJK)
+                searchSpreadsheet: document.getElementById('search-spreadsheet'),
+                filterJawatan: document.getElementById('filter-jawatan'),
+                spreadsheetBody: document.getElementById('spreadsheet-body'),
+                emptyState: document.getElementById('empty-state'),
+                btnRefreshTable: document.getElementById('btn-refresh-table'),
+                btnCopyTsv: document.getElementById('btn-copy-tsv'),
+                btnExportCsv: document.getElementById('btn-export-csv'),
+
+                // Modal Google Sheets
+                btnOpenGsheetModal: document.getElementById('btn-open-gsheet-modal'),
+                btnCloseGsheetModal: document.getElementById('btn-close-gsheet-modal'),
+                gsheetModal: document.getElementById('gsheet-modal'),
+                inputGsheetUrl: document.getElementById('input-gsheet-url'),
+                btnTestGsheet: document.getElementById('btn-test-gsheet'),
+                btnCopyShareLink: document.getElementById('btn-copy-share-link'),
+                btnSaveGsheet: document.getElementById('btn-save-gsheet'),
+                btnClearGsheet: document.getElementById('btn-clear-gsheet'),
+                btnCopyScript: document.getElementById('btn-copy-script'),
+                appsScriptCode: document.getElementById('apps-script-code'),
+                gsheetStatusDot: document.getElementById('gsheet-status-dot'),
+
+                // Modal Padam
+                deleteModal: document.getElementById('delete-modal'),
+                deleteModalDesc: document.getElementById('delete-modal-desc'),
+                btnCancelDelete: document.getElementById('btn-cancel-delete'),
+                btnConfirmDelete: document.getElementById('btn-confirm-delete'),
+
+                // Toast
+                toastContainer: document.getElementById('toast-container')
+            };
+
+            /**
+             * Memulakan aplikasi, membina kotak tick jawatan, dan mengaktifkan kemas kini langsung.
+             */
+            async function init() {
+                populateJawatanTickCards();
+                populateFilterOptions();
+                renderChartPills();
+                bindEvents();
+                applyAdminVisibility();
+
+                // Semak jika URL pautan mengandungi ?sheet=... untuk sambungan automatik pengundi
+                try {
+                    const params = new URLSearchParams(window.location.search);
+                    const sheetParam = params.get('sheet');
+                    if (sheetParam && sheetParam.startsWith('https://script.google.com/')) {
+                        state.googleSheetUrl = sheetParam.trim();
+                    }
+                } catch (err) {
+                    console.warn('Tidak dapat membaca parameter URL:', err);
+                }
+
+                // Mulakan penyelarasan awan bersama
+                await initCloudSync();
+
+                updateGsheetIndicator();
+                if (state.googleSheetUrl) {
+                    startLivePolling();
+                    await fetchFromGoogleSheet(false);
+                } else {
+                    renderAll();
+                }
+            }
+
+            /**
+             * Menjana 7 kad kotak tick jawatan pada borang pencalonan.
+             */
+            function populateJawatanTickCards() {
+                el.containerTick.innerHTML = '';
+                SENARAI_JAWATAN.forEach((jawatan, idx) => {
+                    const id = `tick-jawatan-${idx}`;
+                    const label = document.createElement('label');
+                    label.setAttribute('for', id);
+                    label.className = 'tick-card flex items-center gap-3.5 p-4 rounded-xl border-2 border-slate-200 bg-white hover:border-brand-400 hover:bg-brand-50/40 cursor-pointer transition select-none shadow-2xs';
+                    label.innerHTML = `
+                        <input type="checkbox" id="${id}" name="jawatan-tick" value="${escapeHtml(jawatan)}"
+                            class="w-5 h-5 rounded-md border-slate-300 text-brand-600 focus:ring-brand-500 accent-emerald-600 cursor-pointer shrink-0">
+                        <span class="text-sm font-semibold text-slate-800 leading-snug">${escapeHtml(jawatan)}</span>
+                    `;
+
+                    const checkbox = label.querySelector('input');
+                    checkbox.addEventListener('change', () => {
+                        el.errorJawatan.classList.add('hidden');
+                        if (checkbox.checked) {
+                            label.classList.remove('border-slate-200', 'bg-white');
+                            label.classList.add('border-brand-600', 'bg-brand-50/70');
+                        } else {
+                            label.classList.remove('border-brand-600', 'bg-brand-50/70');
+                            label.classList.add('border-slate-200', 'bg-white');
+                        }
+                    });
+
+                    el.containerTick.appendChild(label);
+                });
+            }
+
+            /**
+             * Mengisi senarai tapisan jawatan pada jadual spreadsheet AJK.
+             */
+            function populateFilterOptions() {
+                el.filterJawatan.innerHTML = '<option value="SEMUA">Semua Jawatan</option>';
+                SENARAI_JAWATAN.forEach((jawatan) => {
+                    const opt = document.createElement('option');
+                    opt.value = jawatan;
+                    opt.textContent = jawatan;
+                    el.filterJawatan.appendChild(opt);
+                });
+            }
+
+            /**
+             * Menjana butang pil penapis jawatan untuk paparan Carta Bar.
+             */
+            function renderChartPills() {
+                el.chartJawatanPills.innerHTML = '';
+                const items = ['SEMUA', ...SENARAI_JAWATAN];
+                items.forEach((item) => {
+                    const isActive = state.selectedChartJawatan === item;
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.textContent = item === 'SEMUA' ? 'Semua 7 Jawatan' : item;
+                    btn.className = isActive
+                        ? 'px-3.5 py-2 rounded-xl text-xs font-bold bg-brand-600 text-white shadow-sm transition'
+                        : 'px-3.5 py-2 rounded-xl text-xs font-semibold bg-white border border-slate-200 text-slate-600 hover:bg-slate-100 transition';
+                    btn.addEventListener('click', () => {
+                        state.selectedChartJawatan = item;
+                        renderChartPills();
+                        renderSummaryCharts();
+                    });
+                    el.chartJawatanPills.appendChild(btn);
+                });
+            }
+
+            /**
+             * Mengikat semua acara (events) antara muka pengguna.
+             */
+            function bindEvents() {
+                // Navigasi Tab
+                el.tabButtons.forEach((btn) => {
+                    btn.addEventListener('click', () => {
+                        const target = btn.getAttribute('data-tab');
+                        if (target === 'spreadsheet' && !state.isAdmin) return;
+                        switchTab(target);
+                    });
+                });
+
+                // Mod AJK (Log masuk / keluar)
+                el.btnAdminToggle.addEventListener('click', () => {
+                    if (state.isAdmin) {
+                        state.isAdmin = false;
+                        applyAdminVisibility();
+                        // Jika sedang berada di tab spreadsheet, kembali ke borang
+                        switchTab('borang');
+                        showToast('Anda telah keluar daripada Mod AJK.', 'info');
+                    } else {
+                        el.inputAdminPin.value = '';
+                        el.errorAdminPin.classList.add('hidden');
+                        toggleModal(el.adminModal, true);
+                        setTimeout(() => el.inputAdminPin.focus(), 50);
+                    }
+                });
+                el.btnCloseAdminModal.addEventListener('click', () => toggleModal(el.adminModal, false));
+                el.btnCancelAdmin.addEventListener('click', () => toggleModal(el.adminModal, false));
+                el.adminModal.addEventListener('click', (e) => {
+                    if (e.target === el.adminModal) toggleModal(el.adminModal, false);
+                });
+                el.adminLoginForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const pin = el.inputAdminPin.value.trim();
+                    if (pin.toUpperCase() === ADMIN_PIN) {
+                        state.isAdmin = true;
+                        applyAdminVisibility();
+                        toggleModal(el.adminModal, false);
+                        showToast('Mod AJK diaktifkan. Data Spreadsheet & tetapan kini dibuka.', 'success');
+                    } else {
+                        el.errorAdminPin.classList.remove('hidden');
+                    }
+                });
+
+                // Borang Pencalonan
+                el.form.addEventListener('submit', handleFormSubmit);
+                el.btnResetForm.addEventListener('click', resetForm);
+                el.inputCalon.addEventListener('input', () => el.errorCalon.classList.add('hidden'));
+                el.inputPencalon.addEventListener('input', () => el.errorPencalon.classList.add('hidden'));
+
+                // Carian & Tapisan Spreadsheet (AJK)
+                el.searchSpreadsheet.addEventListener('input', renderSpreadsheet);
+                el.filterJawatan.addEventListener('change', renderSpreadsheet);
+
+                // Eksport & Muat Semula
+                el.btnExportCsv.addEventListener('click', exportToCsv);
+                el.btnCopyTsv.addEventListener('click', copyToClipboardTsv);
+                el.btnRefreshTable.addEventListener('click', () => handleManualSync());
+                el.btnRefreshSummary.addEventListener('click', () => handleManualSync());
+                el.btnSyncNow.addEventListener('click', () => handleManualSync());
+
+                // Modal Google Sheets
+                el.btnOpenGsheetModal.addEventListener('click', () => {
+                    el.inputGsheetUrl.value = state.googleSheetUrl;
+                    toggleModal(el.gsheetModal, true);
+                });
+                el.btnCloseGsheetModal.addEventListener('click', () => toggleModal(el.gsheetModal, false));
+                el.gsheetModal.addEventListener('click', (e) => {
+                    if (e.target === el.gsheetModal) toggleModal(el.gsheetModal, false);
+                });
+                el.btnTestGsheet.addEventListener('click', testGsheetConnection);
+                el.btnCopyShareLink.addEventListener('click', copyShareVoterLink);
+                el.btnSaveGsheet.addEventListener('click', saveGsheetSettings);
+                el.btnClearGsheet.addEventListener('click', clearGsheetSettings);
+                el.btnCopyScript.addEventListener('click', () => {
+                    copyTextToClipboard(el.appsScriptCode.textContent, 'Kod Google Apps Script berjaya disalin!');
+                });
+
+                // Modal Padam
+                el.btnCancelDelete.addEventListener('click', () => {
+                    state.pendingDeleteId = null;
+                    toggleModal(el.deleteModal, false);
+                });
+                el.btnConfirmDelete.addEventListener('click', confirmDeleteNomination);
+                el.deleteModal.addEventListener('click', (e) => {
+                    if (e.target === el.deleteModal) {
+                        state.pendingDeleteId = null;
+                        toggleModal(el.deleteModal, false);
+                    }
+                });
+            }
+
+            /**
+             * Menukar paparan tab aktif.
+             */
+            function switchTab(tabName) {
+                el.tabPanels.forEach((panel) => {
+                    panel.classList.toggle('hidden', panel.id !== `panel-${tabName}`);
+                });
+                el.tabButtons.forEach((btn) => {
+                    const active = btn.getAttribute('data-tab') === tabName;
+                    if (active) {
+                        btn.classList.add('bg-brand-600', 'text-white', 'shadow-sm');
+                        btn.classList.remove('text-slate-600', 'hover:bg-slate-100');
+                    } else {
+                        btn.classList.remove('bg-brand-600', 'text-white', 'shadow-sm');
+                        btn.classList.add('text-slate-600', 'hover:bg-slate-100');
+                    }
+                });
+            }
+
+            /**
+             * Mengawal keterlihatan elemen sensitif (Data Spreadsheet, Jumlah Pengundi, Google Sheets).
+             */
+            function applyAdminVisibility() {
+                if (state.isAdmin) {
+                    el.adminStatBox.classList.remove('hidden');
+                    el.btnOpenGsheetModal.classList.remove('hidden');
+                    el.btnOpenGsheetModal.classList.add('flex');
+                    el.tabBtnSpreadsheet.classList.remove('hidden');
+                    el.tabBtnSpreadsheet.classList.add('flex');
+                    el.adminBtnLabel.textContent = 'Keluar AJK';
+                } else {
+                    el.adminStatBox.classList.add('hidden');
+                    el.btnOpenGsheetModal.classList.add('hidden');
+                    el.btnOpenGsheetModal.classList.remove('flex');
+                    el.tabBtnSpreadsheet.classList.add('hidden');
+                    el.tabBtnSpreadsheet.classList.remove('flex');
+                    el.adminBtnLabel.textContent = 'Mod AJK';
+                }
+                renderAll();
+            }
+
+            /**
+             * Menyelaras tetapan URL Google Sheets dan undian secara langsung antara peranti.
+             */
+            async function initCloudSync() {
+                if (typeof __firebase_config === 'undefined' || !__firebase_config) return;
+
+                try {
+                    const firebaseConfig = JSON.parse(__firebase_config);
+                    const app = initializeApp(firebaseConfig);
+                    state.auth = getAuth(app);
+                    state.db = getFirestore(app);
+
+                    // Pengesahan pengguna sebelum sebarang capaian data
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        const cred = await signInWithCustomToken(state.auth, __initial_auth_token);
+                        state.currentUser = cred.user;
+                    } else {
+                        const cred = await signInAnonymously(state.auth);
+                        state.currentUser = cred.user;
+                    }
+
+                    if (!state.currentUser) return;
+
+                    // 1. Dengar tetapan URL Google Sheets yang disimpan oleh AJK
+                    const configRef = doc(state.db, 'artifacts', state.appId, 'public', 'data', 'settings', 'gsheet');
+                    onSnapshot(
+                        configRef,
+                        (snap) => {
+                            if (snap.exists()) {
+                                const savedUrl = snap.data().url || '';
+                                if (savedUrl !== state.googleSheetUrl) {
+                                    state.googleSheetUrl = savedUrl;
+                                    updateGsheetIndicator();
+                                    if (savedUrl) {
+                                        startLivePolling();
+                                        fetchFromGoogleSheet(false);
+                                    } else {
+                                        stopLivePolling();
+                                    }
+                                }
+                            }
+                        },
+                        (error) => {
+                            console.error('Ralat mendengar tetapan Google Sheets:', error);
+                        }
+                    );
+
+                    // 2. Dengar rekod pencalonan secara langsung (sandaran serentak sebelum/semasa Google Sheets aktif)
+                    const nomCol = collection(state.db, 'artifacts', state.appId, 'public', 'data', 'nominations');
+                    onSnapshot(
+                        nomCol,
+                        (snapshot) => {
+                            if (state.googleSheetUrl) return;
+
+                            const docs = [];
+                            snapshot.forEach((docSnap) => {
+                                docs.push({ id: docSnap.id, ...docSnap.data() });
+                            });
+                            docs.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+                            state.nominations = docs;
+                            updateLastSyncTime('Langsung');
+                            renderAll();
+                        },
+                        (error) => {
+                            console.error('Ralat mendengar rekod pencalonan:', error);
+                        }
+                    );
+
+                    updateGsheetIndicator();
+                } catch (err) {
+                    console.error('Ralat inisialisasi penyelarasan awan:', err);
+                }
+            }
+
+            /**
+             * Memproses penghantaran borang pencalonan (Mod Kotak Tick Sahaja).
+             */
+            async function handleFormSubmit(e) {
+                e.preventDefault();
+
+                // 1. Dapatkan semua jawatan yang ditanda (tick)
+                const selectedPositions = [];
+                const checkedBoxes = el.containerTick.querySelectorAll('input[name="jawatan-tick"]:checked');
+                checkedBoxes.forEach((cb) => selectedPositions.push(cb.value));
+
+                const calon = el.inputCalon.value.trim();
+                const pencalon = el.inputPencalon.value.trim();
+                const catatan = el.inputCatatan.value.trim();
+
+                // 2. Pengesahan input
+                let isValid = true;
+                if (selectedPositions.length === 0) {
+                    el.errorJawatan.classList.remove('hidden');
+                    isValid = false;
+                }
+                if (!calon) {
+                    el.errorCalon.classList.remove('hidden');
+                    isValid = false;
+                }
+                if (!pencalon) {
+                    el.errorPencalon.classList.remove('hidden');
+                    isValid = false;
+                }
+                if (!isValid) {
+                    showToast('Sila lengkapkan jawatan dan semua ruang wajib bertanda (*).', 'warning');
+                    return;
+                }
+
+                // 3. Format tarikh & masa Brunei
+                const now = new Date();
+                const timestamp = now.getTime();
+                const masaFormatted = now.toLocaleString('ms-BN', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: true
+                });
+
+                // 4. Bina objek rekod bagi setiap jawatan yang ditanda
+                const newRecords = selectedPositions.map((jawatan, idx) => ({
+                    id: 'rec_' + timestamp + '_' + idx + '_' + Math.random().toString(36).substring(2, 6),
+                    createdAt: timestamp + idx,
+                    masa: masaFormatted,
+                    jawatan: jawatan,
+                    calon: calon,
+                    pencalon: pencalon,
+                    catatan: catatan || '-'
+                }));
+
+                setSubmitLoading(true);
+
+                try {
+                    if (state.googleSheetUrl) {
+                        await postToGoogleSheet({ action: 'add', records: newRecords });
+                        await fetchFromGoogleSheet(false);
+                    } else if (state.db && state.currentUser) {
+                        for (const rec of newRecords) {
+                            const docRef = doc(state.db, 'artifacts', state.appId, 'public', 'data', 'nominations', rec.id);
+                            await setDoc(docRef, rec);
+                        }
+                    } else {
+                        state.nominations.unshift(...newRecords);
+                        renderAll();
+                    }
+
+                    showToast(`Terima kasih! Pencalonan anda untuk ${calon} telah berjaya direkodkan.`, 'success');
+                    resetForm();
+                } catch (err) {
+                    console.error('Ralat menyimpan pencalonan:', err);
+                    showToast('Gagal menyimpan ke Google Sheets. Sila semak sambungan internet anda.', 'error');
+                } finally {
+                    setSubmitLoading(false);
+                }
+            }
+
+            /**
+             * Menukar paparan butang hantar semasa proses penyimpanan berlangsung.
+             */
+            function setSubmitLoading(isLoading) {
+                el.btnSubmit.disabled = isLoading;
+                if (isLoading) {
+                    el.btnSubmit.classList.add('opacity-70', 'cursor-not-allowed');
+                    el.btnSubmit.querySelector('span').textContent = state.googleSheetUrl
+                        ? 'Menyimpan ke Google Sheets...'
+                        : 'Menyimpan...';
+                } else {
+                    el.btnSubmit.classList.remove('opacity-70', 'cursor-not-allowed');
+                    el.btnSubmit.querySelector('span').textContent = 'Hantar Pencalonan';
+                }
+            }
+
+            /**
+             * Menghantar data (tambah/padam) ke Google Apps Script Web App.
+             */
+            async function postToGoogleSheet(payload) {
+                if (!state.googleSheetUrl) return;
+                const response = await fetch(state.googleSheetUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(payload)
+                });
+                if (!response.ok) {
+                    throw new Error('HTTP ' + response.status);
+                }
+                return await response.json();
+            }
+
+            /**
+             * Menarik semua rekod pencalonan terkini secara langsung dari Google Sheets (doGet).
+             */
+            async function fetchFromGoogleSheet(showFeedback = false) {
+                if (!state.googleSheetUrl || state.isSyncing) return;
+                state.isSyncing = true;
+                el.syncIcon.classList.add('animate-spin');
+
+                try {
+                    const separator = state.googleSheetUrl.includes('?') ? '&' : '?';
+                    const response = await fetch(`${state.googleSheetUrl}${separator}t=${Date.now()}`, {
+                        method: 'GET'
+                    });
+                    if (!response.ok) throw new Error('HTTP ' + response.status);
+
+                    const result = await response.json();
+                    if (result && result.status === 'ok' && Array.isArray(result.records)) {
+                        state.nominations = result.records;
+                        renderAll();
+                        updateLastSyncTime('Google Sheets');
+                        if (showFeedback) {
+                            showToast('Carta undian telah dikemas kini dari Google Sheets.', 'success');
+                        }
+                    } else {
+                        throw new Error('Format respons tidak sah');
+                    }
+                } catch (err) {
+                    console.error('Ralat membaca dari Google Sheets:', err);
+                    if (showFeedback) {
+                        showToast('Gagal mengemas kini data dari Google Sheets.', 'error');
+                    }
+                } finally {
+                    state.isSyncing = false;
+                    el.syncIcon.classList.remove('animate-spin');
+                }
+            }
+
+            /**
+             * Memulakan kemas kini automatik setiap 10 saat apabila Google Sheets disambungkan.
+             */
+            function startLivePolling() {
+                stopLivePolling();
+                state.pollTimer = setInterval(() => {
+                    if (state.googleSheetUrl && document.visibilityState === 'visible') {
+                        fetchFromGoogleSheet(false);
+                    }
+                }, LIVE_POLL_INTERVAL_MS);
+            }
+
+            /**
+             * Menghentikan kemas kini automatik.
+             */
+            function stopLivePolling() {
+                if (state.pollTimer) {
+                    clearInterval(state.pollTimer);
+                    state.pollTimer = null;
+                }
+            }
+
+            /**
+             * Mengendalikan butang muat semula manual.
+             */
+            function handleManualSync() {
+                if (state.googleSheetUrl) {
+                    fetchFromGoogleSheet(true);
+                } else {
+                    renderAll();
+                    showToast('Paparan telah dikemas kini.', 'info');
+                }
+            }
+
+            /**
+             * Mengemas kini teks masa penyelarasan terakhir.
+             */
+            function updateLastSyncTime(sourceLabel) {
+                const timeStr = new Date().toLocaleTimeString('ms-BN', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: true
+                });
+                el.lastSyncText.textContent = `Dikemas kini (${sourceLabel}): ${timeStr}`;
+            }
+
+            /**
+             * Mengosongkan semula semua ruangan borang.
+             */
+            function resetForm() {
+                el.form.reset();
+                el.containerTick.querySelectorAll('.tick-card').forEach((card) => {
+                    card.classList.remove('border-brand-600', 'bg-brand-50/70');
+                    card.classList.add('border-slate-200', 'bg-white');
+                });
+                el.errorJawatan.classList.add('hidden');
+                el.errorCalon.classList.add('hidden');
+                el.errorPencalon.classList.add('hidden');
+            }
+
+            /**
+             * Mengemas kini keseluruhan paparan (carta ringkasan & spreadsheet AJK).
+             */
+            function renderAll() {
+                const total = state.nominations.length;
+                el.statTotalVotes.textContent = total;
+                el.badgeCount.textContent = total;
+                renderSummaryCharts();
+                if (state.isAdmin) {
+                    renderSpreadsheet();
+                }
+            }
+
+            /**
+             * Menjana Carta Bar (Bar Chart) bagi setiap jawatan yang diundi.
+             * Tidak mendedahkan jumlah keseluruhan pengundi kepada orang awam (hanya peratusan bar).
+             */
+            function renderSummaryCharts() {
+                el.summaryGrid.innerHTML = '';
+
+                const targetPositions = state.selectedChartJawatan === 'SEMUA'
+                    ? SENARAI_JAWATAN
+                    : [state.selectedChartJawatan];
+
+                // Jika memilih 1 jawatan sahaja, besarkan kad supaya penuh satu baris
+                if (targetPositions.length === 1) {
+                    el.summaryGrid.className = 'grid grid-cols-1 gap-5';
+                } else {
+                    el.summaryGrid.className = 'grid grid-cols-1 md:grid-cols-2 gap-5';
+                }
+
+                targetPositions.forEach((jawatan) => {
+                    const tema = TEMA_JAWATAN[jawatan] || {
+                        badge: 'bg-slate-100 text-slate-800 border-slate-200',
+                        bar: 'bg-brand-600',
+                        barBg: 'bg-slate-100',
+                        dot: 'bg-brand-500'
+                    };
+
+                    // Kumpulkan undian mengikut nama calon (tidak sensitif huruf besar/kecil)
+                    const positionVotes = state.nominations.filter((item) => item.jawatan === jawatan);
+                    const totalForPosition = positionVotes.length;
+
+                    const countsMap = new Map();
+                    positionVotes.forEach((item) => {
+                        const key = item.calon.trim().toLowerCase();
+                        if (!countsMap.has(key)) {
+                            countsMap.set(key, { name: item.calon.trim(), count: 0 });
+                        }
+                        countsMap.get(key).count += 1;
+                    });
+
+                    // Susun calon daripada undian tertinggi ke terendah
+                    const sortedCandidates = Array.from(countsMap.values()).sort((a, b) => b.count - a.count);
+
+                    const card = document.createElement('div');
+                    card.className = 'bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col';
+
+                    // Header Kad Jawatan
+                    let barsHtml = '';
+                    if (sortedCandidates.length === 0) {
+                        barsHtml = `
+                            <div class="py-8 text-center">
+                                <p class="text-xs sm:text-sm text-slate-400 italic">Belum ada calon yang diundi bagi jawatan ini.</p>
+                            </div>
+                        `;
+                    } else {
+                        barsHtml = '<div class="space-y-4">';
+                        sortedCandidates.forEach((cand, index) => {
+                            const pct = totalForPosition > 0 ? Math.round((cand.count / totalForPosition) * 100) : 0;
+                            // Dalam Mod AJK, tunjukkan bilangan undi; bagi pengundi biasa, tunjukkan peratusan bar sahaja
+                            const rightLabel = state.isAdmin
+                                ? `${pct}% (${cand.count} undi)`
+                                : `${pct}%`;
+
+                            const rankBadge = index === 0
+                                ? '<span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-gold-100 text-gold-600 text-[11px] font-bold shrink-0">1</span>'
+                                : `<span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-slate-100 text-slate-500 text-[11px] font-semibold shrink-0">${index + 1}</span>`;
+
+                            barsHtml += `
+                                <div class="space-y-1.5">
+                                    <div class="flex items-center justify-between gap-2 text-xs sm:text-sm">
+                                        <div class="flex items-center gap-2 min-w-0">
+                                            ${rankBadge}
+                                            <span class="font-semibold text-slate-800 truncate" title="${escapeHtml(cand.name)}">${escapeHtml(cand.name)}</span>
+                                        </div>
+                                        <span class="font-bold text-slate-700 whitespace-nowrap text-xs">${rightLabel}</span>
+                                    </div>
+                                    <div class="w-full h-3.5 rounded-full ${tema.barBg} overflow-hidden">
+                                        <div class="h-full rounded-full ${tema.bar} transition-all duration-500" style="width: ${pct}%"></div>
+                                    </div>
+                                </div>
+                            `;
+                        });
+                        barsHtml += '</div>';
+                    }
+
+                    // Lencana kanan header kad (Hanya papar angka jumlah undi jika Mod AJK)
+                    const headerCountBadge = state.isAdmin
+                        ? `<span class="text-xs font-bold text-slate-500 bg-white border border-slate-200 px-2.5 py-1 rounded-full">${totalForPosition} undi</span>`
+                        : `<span class="text-xs font-semibold text-slate-500">${sortedCandidates.length} calon</span>`;
+
+                    card.innerHTML = `
+                        <div class="px-5 py-3.5 bg-slate-50 border-b border-slate-200 flex items-center justify-between gap-2">
+                            <div class="flex items-center gap-2.5">
+                                <span class="w-2.5 h-2.5 rounded-full ${tema.dot}"></span>
+                                <h3 class="font-bold text-slate-900 text-sm sm:text-base">${escapeHtml(jawatan)}</h3>
+                            </div>
+                            ${headerCountBadge}
+                        </div>
+                        <div class="p-5 flex-1">
+                            ${barsHtml}
+                        </div>
+                    `;
+
+                    el.summaryGrid.appendChild(card);
+                });
+            }
+
+            /**
+             * Menjana baris jadual spreadsheet (Khas untuk AJK).
+             */
+            function renderSpreadsheet() {
+                const query = el.searchSpreadsheet.value.trim().toLowerCase();
+                const filterJaw = el.filterJawatan.value;
+
+                const filtered = state.nominations.filter((item) => {
+                    const matchJaw = filterJaw === 'SEMUA' || item.jawatan === filterJaw;
+                    const matchQuery = !query ||
+                        item.calon.toLowerCase().includes(query) ||
+                        item.pencalon.toLowerCase().includes(query) ||
+                        item.jawatan.toLowerCase().includes(query) ||
+                        (item.catatan || '').toLowerCase().includes(query);
+                    return matchJaw && matchQuery;
+                });
+
+                el.spreadsheetBody.innerHTML = '';
+
+                if (filtered.length === 0) {
+                    el.emptyState.classList.remove('hidden');
+                    return;
+                }
+
+                el.emptyState.classList.add('hidden');
+
+                filtered.forEach((item, idx) => {
+                    const tema = TEMA_JAWATAN[item.jawatan];
+                    const badgeClass = tema ? tema.badge : 'bg-slate-100 text-slate-800 border-slate-200';
+                    const tr = document.createElement('tr');
+                    tr.className = 'hover:bg-slate-50/90 transition';
+                    tr.innerHTML = `
+                        <td class="py-3 px-4 border-r border-slate-200 text-center text-xs font-semibold text-slate-400">${idx + 1}</td>
+                        <td class="py-3 px-4 border-r border-slate-200 text-xs text-slate-500 whitespace-nowrap">${escapeHtml(item.masa)}</td>
+                        <td class="py-3 px-4 border-r border-slate-200 whitespace-nowrap">
+                            <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold border ${badgeClass}">
+                                ${escapeHtml(item.jawatan)}
+                            </span>
+                        </td>
+                        <td class="py-3 px-4 border-r border-slate-200 font-semibold text-slate-900 whitespace-nowrap">${escapeHtml(item.calon)}</td>
+                        <td class="py-3 px-4 border-r border-slate-200 text-slate-700 whitespace-nowrap">${escapeHtml(item.pencalon)}</td>
+                        <td class="py-3 px-4 border-r border-slate-200 text-slate-500 text-xs max-w-[200px] truncate" title="${escapeHtml(item.catatan)}">${escapeHtml(item.catatan)}</td>
+                        <td class="py-3 px-4 text-center">
+                            <button type="button" data-delete-id="${escapeHtml(item.id)}"
+                                class="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition"
+                                title="Padam rekod">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                </svg>
+                            </button>
+                        </td>
+                    `;
+
+                    tr.querySelector('[data-delete-id]').addEventListener('click', () => {
+                        state.pendingDeleteId = item.id;
+                        el.deleteModalDesc.textContent = `Padam pencalonan "${item.calon}" bagi jawatan ${item.jawatan}?`;
+                        toggleModal(el.deleteModal, true);
+                    });
+
+                    el.spreadsheetBody.appendChild(tr);
+                });
+            }
+
+            /**
+             * Mengesahkan pemadaman rekod pencalonan.
+             */
+            async function confirmDeleteNomination() {
+                if (!state.pendingDeleteId) return;
+                const targetId = state.pendingDeleteId;
+                state.pendingDeleteId = null;
+                toggleModal(el.deleteModal, false);
+
+                try {
+                    if (state.googleSheetUrl) {
+                        showToast('Memadam rekod di Google Sheets...', 'info');
+                        await postToGoogleSheet({ action: 'delete', id: targetId });
+                        await fetchFromGoogleSheet(false);
+                    } else if (state.db && state.currentUser) {
+                        const docRef = doc(state.db, 'artifacts', state.appId, 'public', 'data', 'nominations', targetId);
+                        await deleteDoc(docRef);
+                    } else {
+                        state.nominations = state.nominations.filter((item) => item.id !== targetId);
+                        renderAll();
+                    }
+                    showToast('Rekod pencalonan telah dipadam.', 'success');
+                } catch (err) {
+                    console.error('Ralat memadam rekod:', err);
+                    showToast('Gagal memadam rekod. Sila cuba lagi.', 'error');
+                }
+            }
+
+            /**
+             * Mengeksport data spreadsheet ke fail CSV (Excel).
+             */
+            function exportToCsv() {
+                if (state.nominations.length === 0) {
+                    showToast('Tiada data untuk dimuat turun.', 'warning');
+                    return;
+                }
+                const headers = ['Bil', 'Tarikh & Masa', 'Jawatan', 'Nama Yang Dicalonkan', 'Nama Pencalon', 'Catatan'];
+                const rows = state.nominations.map((item, idx) => [
+                    idx + 1,
+                    item.masa,
+                    item.jawatan,
+                    item.calon,
+                    item.pencalon,
+                    item.catatan
+                ]);
+
+                const csvContent = [headers, ...rows]
+                    .map((row) => row.map((val) => `"${String(val || '').replace(/"/g, '""')}"`).join(','))
+                    .join('\n');
+
+                const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `Undian_MPK_Kg_Burung_Pingai_Berakas_${new Date().toISOString().slice(0, 10)}.csv`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+                showToast('Fail Excel (.csv) berjaya dimuat turun!', 'success');
+            }
+
+            /**
+             * Menyalin jadual dalam format TSV supaya boleh terus ditampal ke Google Sheets / Excel.
+             */
+            function copyToClipboardTsv() {
+                if (state.nominations.length === 0) {
+                    showToast('Tiada data untuk disalin.', 'warning');
+                    return;
+                }
+                const headers = ['Bil', 'Tarikh & Masa', 'Jawatan', 'Nama Yang Dicalonkan', 'Nama Pencalon', 'Catatan'];
+                const lines = [
+                    headers.join('\t'),
+                    ...state.nominations.map((item, idx) =>
+                        [idx + 1, item.masa, item.jawatan, item.calon, item.pencalon, item.catatan]
+                            .map((v) => String(v || '').replace(/\t|\n/g, ' '))
+                            .join('\t')
+                    )
+                ];
+                copyTextToClipboard(lines.join('\n'), 'Data disalin! Anda boleh terus tampal (Paste) ke Google Sheets.');
+            }
+
+            /**
+             * Menguji sambungan Google Apps Script sebelum disimpan.
+             */
+            async function testGsheetConnection() {
+                const url = el.inputGsheetUrl.value.trim();
+                if (!url || !url.startsWith('https://script.google.com/')) {
+                    showToast('Sila masukkan URL Web App Google Apps Script yang sah terlebih dahulu.', 'error');
+                    return;
+                }
+                showToast('Menguji sambungan ke Google Sheets...', 'info');
+                try {
+                    const separator = url.includes('?') ? '&' : '?';
+                    const res = await fetch(`${url}${separator}t=${Date.now()}`);
+                    const data = await res.json();
+                    if (data && data.status === 'ok') {
+                        showToast(`Sambungan berjaya! Ditemui ${data.records.length} rekod dalam Google Sheets.`, 'success');
+                    } else {
+                        showToast('URL ditemui tetapi kod Apps Script belum dikemas kini dengan fungsi doGet.', 'warning');
+                    }
+                } catch (err) {
+                    console.error(err);
+                    showToast('Sambungan gagal. Pastikan akses Web App ditetapkan kepada "Anyone".', 'error');
+                }
+            }
+
+            /**
+             * Menyalin pautan pengundi yang mengandungi parameter URL Google Sheets.
+             */
+            function copyShareVoterLink() {
+                const url = el.inputGsheetUrl.value.trim() || state.googleSheetUrl;
+                if (!url) {
+                    showToast('Sila masukkan dan simpan URL Google Sheets terlebih dahulu.', 'warning');
+                    return;
+                }
+                const baseUrl = window.location.origin + window.location.pathname;
+                const shareUrl = `${baseUrl}?sheet=${encodeURIComponent(url)}`;
+                copyTextToClipboard(shareUrl, 'Pautan pengundi berjaya disalin! Kongsikan ke WhatsApp penduduk kampung.');
+            }
+
+            /**
+             * Menyimpan URL Google Sheets Web App secara kekal untuk semua pengguna.
+             */
+            async function saveGsheetSettings() {
+                const url = el.inputGsheetUrl.value.trim();
+                if (url && !url.startsWith('https://script.google.com/')) {
+                    showToast('Sila masukkan URL Google Apps Script yang sah.', 'error');
+                    return;
+                }
+                state.googleSheetUrl = url;
+
+                if (state.db && state.currentUser) {
+                    try {
+                        const configRef = doc(state.db, 'artifacts', state.appId, 'public', 'data', 'settings', 'gsheet');
+                        await setDoc(configRef, { url: url, updatedAt: Date.now() });
+                    } catch (err) {
+                        console.error('Ralat menyimpan tetapan URL:', err);
+                    }
+                }
+
+                updateGsheetIndicator();
+                toggleModal(el.gsheetModal, false);
+
+                if (url) {
+                    startLivePolling();
+                    showToast('Google Sheets disambungkan! Memuat turun data langsung...', 'success');
+                    await fetchFromGoogleSheet(false);
+                } else {
+                    stopLivePolling();
+                    showToast('Tetapan Google Sheets dikemas kini.', 'info');
+                }
+            }
+
+            /**
+             * Memutuskan sambungan Google Sheets.
+             */
+            async function clearGsheetSettings() {
+                state.googleSheetUrl = '';
+                el.inputGsheetUrl.value = '';
+                stopLivePolling();
+
+                if (state.db && state.currentUser) {
+                    try {
+                        const configRef = doc(state.db, 'artifacts', state.appId, 'public', 'data', 'settings', 'gsheet');
+                        await setDoc(configRef, { url: '', updatedAt: Date.now() });
+                    } catch (err) {
+                        console.error('Ralat memadam tetapan URL:', err);
+                    }
+                }
+
+                updateGsheetIndicator();
+                toggleModal(el.gsheetModal, false);
+                showToast('Sambungan Google Sheets diputuskan.', 'info');
+            }
+
+            /**
+             * Mengemas kini titik status dan bar langsung di header.
+             */
+            function updateGsheetIndicator() {
+                if (state.googleSheetUrl) {
+                    el.gsheetStatusDot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse';
+                    el.gsheetBtnLabel.textContent = 'Sheets Aktif';
+                    el.livePulseDot.className = 'w-2 h-2 rounded-full bg-emerald-400 animate-pulse';
+                    el.liveStatusText.textContent = 'Langsung (Google Sheets) — Undian disimpan kekal & carta dikemas kini setiap 10 saat.';
+                    el.btnSyncNow.classList.remove('hidden');
+                    el.btnSyncNow.classList.add('flex');
+                } else if (state.db && state.currentUser) {
+                    el.gsheetStatusDot.className = 'w-2.5 h-2.5 rounded-full bg-amber-400';
+                    el.gsheetBtnLabel.textContent = 'Google Sheets';
+                    el.livePulseDot.className = 'w-2 h-2 rounded-full bg-emerald-400 animate-pulse';
+                    el.liveStatusText.textContent = 'Sistem Undian Langsung Aktif — Sedia menerima pencalonan penduduk kampung.';
+                    el.btnSyncNow.classList.add('hidden');
+                    el.btnSyncNow.classList.remove('flex');
+                } else {
+                    el.gsheetStatusDot.className = 'w-2.5 h-2.5 rounded-full bg-slate-400';
+                    el.gsheetBtnLabel.textContent = 'Google Sheets';
+                    el.livePulseDot.className = 'w-2 h-2 rounded-full bg-amber-400';
+                    el.liveStatusText.textContent = 'Sedia menerima pencalonan penduduk kampung.';
+                    el.btnSyncNow.classList.add('hidden');
+                    el.btnSyncNow.classList.remove('flex');
+                }
+            }
+
+            /**
+             * Menyalin teks ke papan keratan menggunakan execCommand (serasi dengan iFrame).
+             */
+            function copyTextToClipboard(text, successMsg) {
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                textarea.style.position = 'fixed';
+                textarea.style.opacity = '0';
+                document.body.appendChild(textarea);
+                textarea.select();
+                try {
+                    document.execCommand('copy');
+                    showToast(successMsg, 'success');
+                } catch (err) {
+                    console.error('Gagal menyalin:', err);
+                    showToast('Gagal menyalin teks.', 'error');
+                }
+                document.body.removeChild(textarea);
+            }
+
+            /**
+             * Membuka atau menutup modal dengan kemas.
+             */
+            function toggleModal(modalEl, show) {
+                if (show) {
+                    modalEl.classList.remove('hidden');
+                    modalEl.classList.add('flex');
+                } else {
+                    modalEl.classList.add('hidden');
+                    modalEl.classList.remove('flex');
+                }
+            }
+
+            /**
+             * Memaparkan notifikasi toast di sudut bawah kanan.
+             */
+            function showToast(message, type = 'success') {
+                const colors = {
+                    success: 'bg-emerald-800 text-white border-emerald-700',
+                    error: 'bg-rose-700 text-white border-rose-600',
+                    warning: 'bg-amber-600 text-white border-amber-500',
+                    info: 'bg-slate-800 text-white border-slate-700'
+                };
+
+                const toast = document.createElement('div');
+                toast.className = `pointer-events-auto flex items-center gap-2.5 px-4 py-3 rounded-xl shadow-lg border text-xs sm:text-sm font-medium transition-all duration-300 translate-y-2 opacity-0 ${colors[type] || colors.info}`;
+                toast.textContent = message;
+
+                el.toastContainer.appendChild(toast);
+
+                requestAnimationFrame(() => {
+                    toast.classList.remove('translate-y-2', 'opacity-0');
+                });
+
+                setTimeout(() => {
+                    toast.classList.add('opacity-0', 'translate-y-2');
+                    setTimeout(() => toast.remove(), 300);
+                }, 3500);
+            }
+
+            /**
+             * Melindungi daripada XSS dengan menukar aksara khas HTML.
+             */
+            function escapeHtml(str) {
+                return String(str)
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#039;');
+            }
+
+            // Mulakan aplikasi setelah halaman sedia
+            document.addEventListener('DOMContentLoaded', init);
+        })();
+    </script>
+</body>
+</html>
